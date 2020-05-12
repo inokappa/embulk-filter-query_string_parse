@@ -1,0 +1,18 @@
+version: '3.7'
+
+x-common_environment: &common_environment
+  TZ: Asia/Tokyo
+x-common_volumes: &common_volumes
+  volumes:
+    - $HOME/.aws:/root/.aws
+    - ./:/embulk
+
+services:
+  embulk:
+    build:
+      context: .
+    container_name: embulk
+    working_dir: /embulk
+    environment: *common_environment
+    <<: *common_volumes
+    tty: true

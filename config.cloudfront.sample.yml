@@ -1,0 +1,55 @@
+in:
+  type: s3
+  bucket: {{ env.BUCKET_NAME }}
+  path_prefix: {{ env.PATH_PREFIX }}
+  endpoint: s3-ap-northeast-1.amazonaws.com
+  access_key_id: {{ env.ACCESS_KEY }}
+  secret_access_key: {{ env.SECRET_KEY }}
+  decoders:
+    - {type: gzip}
+  parser:
+    charset: UTF-8
+    newline: CRLF
+    type: csv
+    delimiter: "\t"
+    trim_if_not_quoted: false
+    skip_header_lines: 2
+    allow_extra_columns: true
+    allow_optional_columns: true
+    null_string: "-"
+    columns:
+      - {name: date, type: string}
+      - {name: time, type: string}
+      - {name: x_edge_location, type: string}
+      - {name: sc_bytes, type: string}
+      - {name: c_ip, type: string}
+      - {name: cs_method, type: string}
+      - {name: cs_host, type: string}
+      - {name: cs_uri_stem, type: string}
+      - {name: sc_status, type: string}
+      - {name: cs_referer, type: string}
+      - {name: cs_user_agent, type: string}
+      - {name: cs_uri_query, type: string}
+      - {name: cs_cookie, type: string}
+      - {name: x_edge_result_type, type: string}
+      - {name: x_edge_request_id, type: string}
+      - {name: x_host_header, type: string}
+      - {name: cs_protocol, type: string}
+      - {name: cs_bytes, type: string}
+      - {name: time_taken, type: string}
+      - {name: x_forwarded_for, type: string}
+      - {name: ssl_protocol, type: string}
+      - {name: ssl_cipher, type: string}
+      - {name: x_edge_response_result_type, type: string}
+      - {name: cs_protocol_version, type: string}
+      - {name: fle_status, type: string}
+      - {name: fle_encrypted_fields, type: string}
+exec: {}
+filters:
+  - type: query_string_parse
+    query_string_column_name: cs_uri_query
+    expanded_columns:
+      - {name: aa, type: string}
+      - {name: bb, type: string}
+out:
+  type: stdout
